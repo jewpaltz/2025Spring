@@ -10,6 +10,11 @@
         .section {
             background-color: azure;
         }
+        .item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
     </style>
 </head>
 <body>
@@ -25,7 +30,7 @@
       
           </a>
       
-          <a role="button" class="navbar-burger" aria-label="menu" aria-expanded="false" data-target="navbarBasicExample">
+          <a :class="{ 'is-active': isOpen}" role="button" class="navbar-burger" aria-label="menu" aria-expanded="false" data-target="navbarBasicExample" @click="toggleMenu">
             <span aria-hidden="true"></span>
             <span aria-hidden="true"></span>
             <span aria-hidden="true"></span>
@@ -33,7 +38,7 @@
           </a>
         </div>
       
-        <div id="navbarBasicExample" class="navbar-menu">
+        <div id="navbarBasicExample" class="navbar-menu" :class="{ 'is-active': isOpen}">
           <div class="navbar-start">
             <a class="navbar-item">
                 <i class="fas fa-home"></i>
@@ -100,56 +105,87 @@
             <div class="container">
                 <div class="columns">
                     <div class="column">
-                        <div class="notification is-success is-light">
-                            <button class="delete"></button>
-                            This is a primary notification #1
+
+
+                        <div v-for="(message, index) in notifications" :key="index" class="notification is-success is-light">
+                            <button class="delete" @click="removeNotification(index)"></button>
+                            {{ message }}
                         </div>
-                        <div class="notification is-success is-light">
-                            <button class="delete"></button>
-                            This is a primary notification #2
-                        </div>
-                        <div class="notification is-success is-light">
-                            <button class="delete"></button>
-                            This is a primary notification #3
-                        </div>
-                        <div class="notification is-success is-light">
-                            <button class="delete"></button>
-                            This is a primary notification #4
-                        </div>
+
+                        
                     </div>
                     <div class="column">
                         <div class="notification is-warning is-light">
                             This is a warning notification
                         </div>
-                    </div>
-                    <div class="column">
                         <div class="notification is-danger is-light">
                             This is a danger notification
                         </div>
                     </div>
+
+                    <div class="column">
+                      <h2 class="title">Items for sale</h2>
+                      <ul>
+                        <li v-for="item in items" :key="item.name" class="item">
+                          {{ item.name }} - ${{ item.price }}
+                          <button class="button is-primary" @click="addToCart(item)">Add to cart</button>
+                        </li>
+                      </ul>
+                      <h2 class="title">
+                        Your Cart
+                        {{ cart.length }} items 
+                        (${{ cart.reduce((acc, item) => acc + item.price * item.quantity, 0) }})
+                      </h2>
+                        <ul class="box">
+                            <li v-for="item in cart" :key="item.name">
+                                {{ item.name }} - ${{ item.price }} x {{ item.quantity }} = ${{ item.price * item.quantity }}
+                            </li>
+                        </ul>
+                    </div>
+
+
                 </div>
             </div>
-            <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js" integrity="sha512-v2CJ7UaYy4JwqLDIrZUI/4hqeoQieOmAZNXBeQyjo21dadnwR+8ZaIJVT8EE2iyI61OV8e6M8PP2/4hpQINQ/g==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+            <script src="https://unpkg.com/vue@3/dist/vue.global.js" ></script>
             <script>
-                $(document).ready(function() {
-                    $('.navbar-burger').click(function() {
-                        $('.navbar-burger').toggleClass('is-active'); 
-                        $('.navbar-menu').toggleClass('is-active');
-                    });
+              const { createApp, ref } = Vue;
 
-                    $('.delete').click(function() {
-                        $(this).closest('.notification').slideUp();
-                    });
+              const app = createApp({
+                setup() {
+                  const notifications = ref([
+                    'This is a primary notification #1',
+                    'This is a primary notification #2',
+                    'This is a primary notification #3',
+                    'This is a primary notification #4',
+                  ]);
 
-                    $('.notification').click(function() {
-                            $(this).animate({
-                            opacity: 0.25,
-                            left: '50px',
-                            height: '50px',
-                            width: '50px'
-                        }, 5000);
-                    });
-                });
+                  function removeNotification(index) {
+                    notifications.value.splice(index, 1);
+                  };
+
+                  const isOpen = ref(false);
+                  function toggleMenu() {
+                    isOpen.value = !isOpen.value;
+                  }
+
+                  const cart = ref([])
+                  const items = [
+                    { name: 'Apple', price: 1.25 },
+                    { name: 'Banana', price: 0.75 },
+                    { name: 'Cherry', price: 2.25 },
+                    { name: 'Date', price: 3.25 },
+                  ];
+                  
+                  function addToCart({ name, price}) {
+                    cart.value.push({name, price, quantity: 1});
+                  }
+
+                  return { notifications, removeNotification, isOpen, toggleMenu, cart, addToCart, items };
+                }
+              });
+
+              app.mount('body');
+
             </script>
 </body>
 </html>
