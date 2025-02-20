@@ -5,11 +5,15 @@
   "description": "",
 
   "scripts": {
-    "start": "node server/index.js"
+    "start": "node server/index.js",
+    "dev": "nodemon server/index.js --watch server"
   },
   "license": "ISC",
   "dependencies": {
     "express": "^4.21.2",
     "dayjs": "^1.11.13"
+  },
+  "devDependencies": {
+    "nodemon": "^3.1.9"
   }
 }
