@@ -1,9 +1,10 @@
 <script setup lang="ts">
-import TheWelcome from '../components/TheWelcome.vue'
+
+var bestClass = 'Web Programming'
 </script>
 
 <template>
   <main>
-    <TheWelcome />
+    <h1 class="title">Welcome to {{ bestClass }}</h1>
   </main>
 </template>
