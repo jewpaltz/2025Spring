@@ -27,7 +27,7 @@ const isActive = ref(false)
 
 
                     <RouterLink to="/" class="navbar-item">Home</RouterLink>
-                    <RouterLink to="/products" class="navbar-item">Home</RouterLink>
+                    <RouterLink to="/products" class="navbar-item">Products</RouterLink>
                     <RouterLink to="/about" class="navbar-item">About</RouterLink>
 
                     <a class="navbar-item">
