@@ -11,8 +11,8 @@ export function refCart() {
   return { cart, addToCart, removeFromCart, count, totalItems, totalPrice }
 }
 
-export function addToCart({ name, price }: Product) {
-  cart.value.push({ name, price, quantity: 1 })
+export function addToCart({ title, price }: Product) {
+  cart.value.push({ title, price, quantity: 1 })
 }
 
 export function removeFromCart(index: number) {
