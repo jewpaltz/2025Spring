@@ -14,7 +14,9 @@ function addToCart(product: Product) {
         <div class="shelf">
             <div class="product" v-for="p in products.items" :key="p.id">
                 <div class="product-image">
-                    <img :src="p.thumbnail" alt="product image" />
+                    <RouterLink :to="`/products/${p.id}`">
+                        <img :src="p.thumbnail" alt="product image" />
+                    </RouterLink>
                 </div>
                 <div class="product-info">
                     <h2>{{ p.title }}</h2>
