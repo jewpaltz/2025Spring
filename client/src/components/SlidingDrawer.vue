@@ -1,9 +1,12 @@
 <script setup lang="ts">
 
+const props = defineProps<{
+    isOpen?: boolean
+}>()
 </script>
 
 <template>
-    <div class="sliding-drawer">
+    <div class="sliding-drawer" :class="{ open: props.isOpen }">
         <slot></slot>
     </div>
 </template>
