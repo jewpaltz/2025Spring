@@ -1,10 +1,11 @@
 <script setup lang="ts">
+import { addToCart } from '@/models/cart';
 import { getAll, type Product } from '@/models/products';
 
 const products = getAll()
 
-function addToCart(product: Product) {
-    console.log('Add to cart', product)
+function doAddToCart(product: Product) {
+    addToCart(product)
 }
 </script>
 
@@ -22,7 +23,7 @@ function addToCart(product: Product) {
                     <h2>{{ p.title }}</h2>
                     <p>{{ p.description }}</p>
                     <span class="price">${{ p.price }}</span>
-                    <button class="button is-success" @click="addToCart(p)">Add to cart</button>
+                    <button class="button is-success" @click="doAddToCart(p)">Add to cart</button>
                 </div>
             </div>
         </div>
