@@ -34,5 +34,6 @@ body {
   background-color: white;
   height: 100vh;
   padding: 1rem;
+  padding-top: 4em;
 }
 </style>

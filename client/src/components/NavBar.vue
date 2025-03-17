@@ -1,7 +1,10 @@
 <script setup lang="ts">
+import { refCart } from '@/models/cart';
 import { ref } from 'vue'
 
 const isActive = ref(false)
+
+const cart = refCart()
 
 const props = defineProps<{
     isShoppingCartOpen?: boolean
@@ -14,7 +17,7 @@ const event = defineEmits<{
 </script>
 
 <template>
-    <nav class="navbar is-info" role="navigation" aria-label="main navigation">
+    <nav class="navbar is-info is-fixed-top" role="navigation" aria-label="main navigation">
         <div class="container">
             <div class="navbar-brand">
                 <a class="navbar-item" href="https://jewpaltz.com">
@@ -67,10 +70,12 @@ const event = defineEmits<{
 
                 <div class="navbar-end">
                     <div class="navbar-item">
-                        <button class="button" :class="{ 'is-active': props.isShoppingCartOpen }"
+                        <button class="button is-light" :class="{ 'is-active': props.isShoppingCartOpen }"
                                 @click="event('update:isShoppingCartOpen', !props.isShoppingCartOpen)">
-                            <i class="fas fa-shopping-cart"></i>
+                            <span class="icon"> <i class="fas fa-shopping-cart"></i></span>
+
                         </button>
+                        <span class="cart-length tag is-danger">{{ cart.length }}</span>
                     </div>
                     <div class="navbar-item">
                         <div class="buttons">
@@ -88,4 +93,11 @@ const event = defineEmits<{
     </nav>
 </template>
 
-<style scoped></style>
+<style scoped>
+.cart-length {
+    position: absolute;
+    top: 0;
+    right: 0;
+    border-radius: 50%;
+}
+</style>
