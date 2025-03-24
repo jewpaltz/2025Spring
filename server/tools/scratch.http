@@ -9,3 +9,34 @@ GET https://dummyjson.com/products
 
 ###
 GET https://dummyjson.com/products/1
+
+###
+http://localhost:8000/products
+
+###
+GET http://localhost:8000/products/1
+
+###
+POST http://localhost:8000/products
+Content-Type: application/json
+
+{
+  "title": "New Product",
+  "description": "This is a new product",
+  "price": 100,
+  "category": "electronics",
+  "image": "https://example.com/image.jpg",
+  "stock": 50
+}
+
+###
+PATCH http://localhost:8000/products/1
+Content-Type: application/json
+
+{
+  "price": 150
+}
+
+###
+DELETE http://localhost:8000/products/1
+
