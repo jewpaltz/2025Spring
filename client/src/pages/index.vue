@@ -7,7 +7,7 @@ var bestClass = 'Web Programming'
   <main>
     <h1 class="title">Anonymous Feedback Form</h1>
     <h2 class="subtitle">Enter your feedback here...</h2>
-    <form action="#" class="form" method="post">
+    <form action="#" class="form" method="get">
       <textarea
                 class="textarea"
                 placeholder="Tell me about your favorite class">
