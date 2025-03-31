@@ -8,7 +8,11 @@ async function getAll() {
 }
 
 async function get(id){
-    return data.items.find((item) => item.id == id)
+    const item = data.items.find((item) => item.id == id)
+    if (!item) {
+        throw new Error('Item not found', { status: 404 })
+    }
+    return item
 }
 
 async function create(item){

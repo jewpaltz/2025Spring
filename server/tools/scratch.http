@@ -2,19 +2,10 @@
 
 
 ###
-GET https://google.com/search?q=new+paltz 
-
-###
-GET https://dummyjson.com/products
-
-###
-GET https://dummyjson.com/products/1
-
-###
 http://localhost:8000/api/v1/products
 
 ###
-GET http://localhost:8000/api/v1/products/99
+GET http://localhost:8000/api/v1/products/1
 
 ###
 POST http://localhost:8000/api/v1/products
