@@ -4,9 +4,9 @@
 const express = require('express')
 const productsController = require('./controllers/products');
 const usersController = require('./controllers/users');
-const e = require('express');
+require('dotenv').config()
 
-const PORT = 8000
+const PORT = process.env.PORT ?? 8000
 
 const app = express();
 
@@ -42,7 +42,10 @@ app.use((err, req, res, next) => {
 
 
 app.listen(PORT, () => {
-    console.log(`Server running at http://localhost:${PORT}/`)
+    console.log(`
+      Welcome to the best class at New Paltz - ${process.env.BEST_CLASS}
+      Server running at http://localhost:${PORT}/
+    `)
 });
 
 /*
