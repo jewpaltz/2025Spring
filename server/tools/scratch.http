@@ -2,7 +2,10 @@
 
 
 ###
-http://localhost:8000/api/v1/products
+http://localhost:8000/api/v1/products?offset=5&limit=10&sort=price&order=asc
+
+###
+GET http://localhost:8000/api/v1/products/search/the?limit=10&sort=price&order=asc
 
 ###
 GET http://localhost:8000/api/v1/products/122

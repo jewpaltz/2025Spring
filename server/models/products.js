@@ -8,13 +8,15 @@ const { connect } = require('./supabase')
 const TABLE_NAME = 'products'
 
 const BaseQuery = () => connect().from(TABLE_NAME)
-    .select('*, product_reviews(average_rating:rating.avg())')
+    .select('*, product_reviews(average_rating:rating.avg())', { count: "estimated" })
     //.select('*')
 
 const isAdmin = true;
 
-async function getAll() {
+async function getAll(limit = 30, offset = 0, sort = 'id', order = 'desc'){
     const list = await BaseQuery()
+    .order(sort, { ascending: order === 'asc' })
+    .range(offset, offset + limit - 1) // 0 based index but range is inclusive
     if(list.error){
         throw list.error
     }
@@ -36,13 +38,18 @@ async function get(id){
     return item
 }
 
-async function search(query){
-    const { data: items, error } = await BaseQuery()
+async function search(query, limit = 30, offset = 0, sort = 'id', order = 'desc'){
+    const { data: items, error, count } = await BaseQuery()
     .or(`title.ilike.%${query}%,description.ilike.%${query}%`)
+    .order(sort, { ascending: order === 'asc' })
+    .range(offset, offset + limit -1)
     if (error) {
         throw error
     }
-    return items
+    return {
+        items,
+        total: count
+    }
 } 
 
 async function create(item){
