@@ -126,7 +126,9 @@ function mapToDB(item) {
         shipping_information: item.shippingInformation,
         availability_status: item.availabilityStatus,
         return_policy: item.returnPolicy,
-        minimum_order_quantity: item.minimumOrderQuantity
+        minimum_order_quantity: item.minimumOrderQuantity,
+        thumbnail: item.thumbnail,
+        images: item.images,
     }
 }
 
