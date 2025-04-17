@@ -19,7 +19,8 @@ Content-Type: application/json
   "description": "This is a new product",
   "price": 100,
   "category": "electronics",
-  "stock": 50
+  "stock": 50,
+  "thumbnail": "https://media-cldnry.s-nbcnews.com/image/upload/t_focal-1000x667,f_auto,q_auto:best/rockcms/2025-04/250403-donald-trump-se-1026a-c954d5.jpg"
 }
 
 ###
