@@ -7,12 +7,16 @@ const { connect } = require('./supabase')
 
 const TABLE_NAME = 'products'
 
+const BaseQuery = () => connect().from(TABLE_NAME)
+    .select('*, product_reviews(average_rating:rating.avg())')
+    //.select('*')
+
 const isAdmin = true;
 
 async function getAll() {
-    const list = await connect().from(TABLE_NAME).select('*')
+    const list = await BaseQuery()
     if(list.error){
-        throw error
+        throw list.error
     }
     return {
         items: list.data,
@@ -21,7 +25,8 @@ async function getAll() {
 }
 
 async function get(id){
-    const { data: item, error } = await connect().from(TABLE_NAME).select('*').eq('id', id)
+    const { data: item, error } = await connect().from(TABLE_NAME)
+    .select('*, product_reviews(*)').eq('id', id)
     if (!item.length) {
         throw new CustomError('Item not found', statusCodes.NOT_FOUND)
     }
@@ -32,7 +37,7 @@ async function get(id){
 }
 
 async function search(query){
-    const { data: items, error } = await connect().from(TABLE_NAME).select('*')
+    const { data: items, error } = await BaseQuery()
     .or(`title.ilike.%${query}%,description.ilike.%${query}%`)
     if (error) {
         throw error
