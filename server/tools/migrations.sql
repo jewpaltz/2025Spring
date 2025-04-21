@@ -2,13 +2,13 @@
 -- Create the users table
 CREATE TABLE users (
     id SERIAL PRIMARY KEY,
-    first_name VARCHAR(255) NOT NULL,
-    last_name VARCHAR(255) NOT NULL,
+    firstName VARCHAR(255) NOT NULL,
+    lastName VARCHAR(255) NOT NULL,
     age INT NOT NULL,
     gender VARCHAR(50),
     email VARCHAR(255) UNIQUE NOT NULL,
     phone VARCHAR(50),
-    birth_date DATE,
+    birthDate DATE,
     image TEXT,
     university VARCHAR(255),
     role VARCHAR(50) NOT NULL
