@@ -45,6 +45,9 @@ function doAddToCart(product: Product) {
 }
 
 .shelf .product {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
     width: 30%;
     margin: 1em;
     padding: 1em;

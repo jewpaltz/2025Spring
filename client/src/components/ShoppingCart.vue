@@ -12,22 +12,25 @@ const cart = refCart();
         <ul>
             <li v-for="item in cart" :key="item.product.id">
                 <img :src="item.product.thumbnail" :alt="item.product.title" />
-                <span>
-                    {{ item.product.title }}
-                </span>
-                <span>
-                    <select v-model="item.quantity">
-                        <option v-for="n in 10" :key="n" :value="n">
-                            {{ n }}
-                        </option>
-                    </select>
-                </span>
-                <span>
-                    x ${{ item.product.price }}
-                </span>
-                <span>
-                    = ${{ item.product.price * item.quantity }}
-                </span>
+                <div class="product-info">
+                    <h4 class="title is-6">
+                        {{ item.product.title }}
+                    </h4>
+                    <span>
+                        <select v-model="item.quantity">
+                            <option v-for="n in 10" :key="n" :value="n">
+                                {{ n }}
+                            </option>
+                        </select>
+                    </span>
+                    <span>
+                        x ${{ item.product.price }}
+                    </span>
+                    <span>
+                        = ${{ item.product.price * item.quantity }}
+                    </span>
+                </div>
+
             </li>
         </ul>
         <h2 class="title is-4">
@@ -43,12 +46,19 @@ const cart = refCart();
 
 li {
     display: flex;
-    justify-content: space-between;
     align-items: center;
+    gap: 1em;
+
+    padding: .2em;
+    border-bottom: 1px solid #ccc;
 
     img {
         width: 50px;
         height: 50px;
     }
+}
+
+.title.is-6 {
+    margin: 0 0 0.2em;
 }
 </style>

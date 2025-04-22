@@ -31,14 +31,29 @@ const session = refSession()
             </div>
         </div>
     </div>
-    <div class="buttons" v-else>
-        <a class="button is-light" @click="logout()">
-            Log out
-        </a>
-        Hello
-        {{ session?.user?.firstName }} {{ session?.user?.lastName }}
+    <div class="profile" v-else>
+        <img
+             :src="session?.user?.image"
+             alt="user avatar" />
+        <div>
+            {{ session?.user?.firstName }} {{ session?.user?.lastName }}
+            (<a @click="logout()">Log out</a>) <br />
+            <i>{{ session?.user?.email }}</i>
+        </div>
 
     </div>
 </template>
 
-<style scoped></style>
+<style scoped>
+.navbar-dropdown {
+    max-height: calc(100vh - 3.5rem);
+    overflow-y: auto;
+}
+
+.profile {
+    display: flex;
+    align-items: center;
+    gap: .5em;
+    font-size: small;
+}
+</style>
