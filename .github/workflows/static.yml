@@ -50,6 +50,7 @@ jobs:
               run: cd client && pnpm build
               env:
                   # Set the base URL for the build
+                  BASE_URL: ./
                   VITE_API_ROOT: https://dynamic2025spring.onrender.com/api/v1/
 
             - name: Setup Pages

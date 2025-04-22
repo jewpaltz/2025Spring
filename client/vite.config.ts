@@ -8,6 +8,7 @@ import VueRouter from 'unplugin-vue-router/vite'
 
 // https://vite.dev/config/
 export default defineConfig({
+  base: '/2025Spring/',
   plugins: [
     VueRouter(/*
       options
