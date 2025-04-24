@@ -30,6 +30,7 @@ jobs:
         runs-on: ubuntu-latest
         env:
             BASE_URL: ${{ github.event.repository.html_url }}
+            VITE_API_ROOT: https://dynamic2025spring.onrender.com/api/v1/
 
         steps:
             - name: Checkout
@@ -53,7 +54,7 @@ jobs:
               uses: actions/upload-pages-artifact@v3
               with:
                   # Upload entire repository
-                  path: "."
+                  path: "./dist"
             - name: Deploy to GitHub Pages
               id: deployment
               uses: actions/deploy-pages@v4
