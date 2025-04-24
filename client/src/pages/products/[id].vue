@@ -24,9 +24,29 @@ getOne(route.params.id)
                 <h1 class="title">
                     {{ product.title }}
                 </h1>
+                <h2 class="subtitle">
+                    {{ product.category }} - {{ product.brand }} - {{ product.tags?.join(' / ') }}
+                </h2>
+
                 <p>{{ product.description }}</p>
                 <span class="price">${{ product.price }}</span>
                 <button class="button is-success">Add to cart</button>
+
+                <div>
+                    Reviews:
+                    <ul>
+                        <li class="card" v-for="review in product.reviews" :key="review.id">
+                            <div class="card-text">
+                                <img :src="review.reviewer?.image" alt="reviewer avatar"
+                                     class="avatar" />
+                                <strong>{{ review.reviewer?.firstName }} {{ review.reviewer?.lastName }}</strong> - {{
+                                    review.rating }} stars
+                                <p>{{ review.comment }}</p>
+                            </div>
+
+                        </li>
+                    </ul>
+                </div>
             </div>
 
         </div>
@@ -39,6 +59,19 @@ getOne(route.params.id)
 </template>
 
 <style scoped>
+.card-text {
+    padding: .5em;
+}
+
+
+.avatar {
+    width: 50px;
+    height: 50px;
+    border-radius: 5%;
+    margin-right: 1em;
+    float: left;
+}
+
 .product {
     display: flex;
 }
