@@ -36,12 +36,15 @@ getOne(route.params.id)
                     Reviews:
                     <ul>
                         <li class="card" v-for="review in product.reviews" :key="review.id">
-                            <div class="card-text">
+                            <div class="card-content">
                                 <img :src="review.reviewer?.image" alt="reviewer avatar"
                                      class="avatar" />
                                 <strong>{{ review.reviewer?.firstName }} {{ review.reviewer?.lastName }}</strong> - {{
                                     review.rating }} stars
                                 <p>{{ review.comment }}</p>
+                                <i>
+                                    {{ review.date }}
+                                </i>
                             </div>
 
                         </li>
@@ -59,10 +62,11 @@ getOne(route.params.id)
 </template>
 
 <style scoped>
-.card-text {
-    padding: .5em;
+.card {
+    border: 1px solid #ccc;
+    margin-bottom: .5em;
+    ;
 }
-
 
 .avatar {
     width: 50px;
