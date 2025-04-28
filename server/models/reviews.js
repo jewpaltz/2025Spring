@@ -1,15 +1,17 @@
 /*  B"H
 */
 
-const data = require('../data/products.json')
+// I took out a reference to the json. Because the only use for it is to seed the database. and reviews are seeded along with products
 const { CustomError, statusCodes } = require('./errors')
 const { connect } = require('./supabase')
 
-const TABLE_NAME = 'products'
+const TABLE_NAME = 'product_reviews'
 
 const BaseQuery = () => connect().from(TABLE_NAME)
-    .select('*, product_reviews(average_rating:rating.avg())', { count: "estimated" })
-    //.select('*')
+    // You've always got to make sure that you are accessing related tables that exist in the database
+    // in this case I'm actually doing something unique. I usually do not access entire related tables from a list query
+    // but in this case I know that there will only be one product and one reviewer for each review
+    .select('*, product: products(*), reviewer:users(*)', { count: "estimated" })
 
 const isAdmin = true;
 
@@ -27,9 +29,11 @@ async function getAll(limit = 30, offset = 0, sort = 'id', order = 'desc'){
 }
 
 async function get(id){
+    console.log('Getting item with id:', id)
     const { data: item, error } = await connect().from(TABLE_NAME)
-    .select('*, reviews:product_reviews(*, reviewer:users(*))').eq('id', id)
-    if (!item.length) {
+    // Whenever we get a review, we usually want to know who wrote it and what product it is for
+    .select('*, product:products(*), reviewer:users(*)').eq('id', id)
+    if (!item) {
         throw new CustomError('Item not found', statusCodes.NOT_FOUND)
     }
     if (error) {
@@ -40,7 +44,7 @@ async function get(id){
 
 async function search(query, limit = 30, offset = 0, sort = 'id', order = 'desc'){
     const { data: items, error, count } = await BaseQuery()
-    .or(`title.ilike.%${query}%,description.ilike.%${query}%`)
+    .or(`comment.ilike.%${query}%`)
     .order(sort, { ascending: order === 'asc' })
     .range(offset, offset + limit -1)
     if (error) {
@@ -56,10 +60,12 @@ async function create(item){
     if(!isAdmin){
         throw CustomError("Sorry, you are not authorized to create a new item", statusCodes.UNAUTHORIZED)
     }
-    const { data: newItem, error } = await connect().from(TABLE_NAME).insert(item).select('*')
+    const { data, error } = await connect().from(TABLE_NAME).insert(item).select('id')
+
     if (error) {
         throw error
     }
+    const newItem = await get(data[0].id)
     return newItem
 }
 
@@ -67,12 +73,12 @@ async function update(id, item){
     if(!isAdmin){
         throw CustomError("Sorry, you are not authorized to update this item", statusCodes.UNAUTHORIZED)
     }
-    const { data: updatedItem, error } = await connect().from(TABLE_NAME).update(item).eq('id', id).select('*')
+    const { error } = await connect().from(TABLE_NAME).update(item).eq('id', id).select('id')
     if (error) {
         throw error
     }
+    const updatedItem = await get(id)
     return updatedItem
-
 }
 
 async function remove(id){
@@ -86,70 +92,7 @@ async function remove(id){
     return deletedItem
 }
 
-async function seed(){
-
-    const { data: user } = await connect().from('users').select('*')
-
-    for (const item of data.items) {
-
-        const insert = mapToDB(item)
-        const { data: newItem, error } = await connect().from(TABLE_NAME).insert(insert).select('*')
-        if (error) {
-            throw error
-        }
-
-        for (const review of item.reviews) {
-            const randomIndex = Math.floor(Math.random() * user.length)
-            const randomUser = user[randomIndex]
-
-            const reviewInsert = mapReviewToDB(review, newItem[0].id, randomUser)
-
-            const { data: newReview, error } = await connect().from('product_reviews').insert(reviewInsert).select('*')
-
-            if (error) {
-                throw error
-            }
-        }
-
-    }
-    return { message: 'Seeded successfully' }
-}
-
-function mapToDB(item) {
-    return {
-        //id: item.id,
-        title: item.title,
-        description: item.description,
-        category: item.category,
-        price: item.price,
-        rating: item.rating,
-        stock: item.stock,
-        tags: item.tags,
-        brand: item.brand,
-        sku: item.sku,
-        weight: item.weight,
-        dimensions: item.dimensions,
-        shipping_information: item.shippingInformation,
-        availability_status: item.availabilityStatus,
-        return_policy: item.returnPolicy,
-        minimum_order_quantity: item.minimumOrderQuantity,
-        thumbnail: item.thumbnail,
-        images: item.images,
-    }
-}
-
-function mapReviewToDB(review, product_id, user) {
-    return {
-        //id: review.id,
-        product_id: product_id,
-        rating: review.rating,
-        comment: review.comment,
-        reviewer_email: user.email,
-        reviewer_name: user.name,
-        date: review.date,
-        reviewer_id: user.id,
-    }
-}
+// We are seeding reviews in the products model. So this is not needed here
 
 module.exports = {
     getAll,
@@ -158,5 +101,4 @@ module.exports = {
     create,
     update,
     remove,
-    seed,
 }

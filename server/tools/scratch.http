@@ -73,3 +73,44 @@ DELETE http://localhost:8000/api/v1/users/1
 
 ###
 POST http://localhost:8000/api/v1/users/seed
+
+
+########################
+# Reviews Controller
+########################
+
+###
+http://localhost:8000/api/v1/reviews
+
+###
+GET http://localhost:8000/api/v1/reviews/720
+
+###
+GET http://localhost:8000/api/v1/reviews/search/great?limit=10&sort=rating&order=asc
+
+###
+POST http://localhost:8000/api/v1/reviews
+Content-Type: application/json
+
+{
+"product_id": 250,
+  "rating": 2,
+  "comment": "Why is everyone so obsessed with kiwis? I can't stand the taste of them. I don't get the hype.",
+  "date": "2025-05-23T08:56:21.62",
+  "reviewer_name": "Emma Miller",
+  "reviewer_email": "emma.miller@x.dummyjson.com",
+  "reviewer_id": 5
+}
+
+###
+PATCH http://localhost:8000/api/v1/reviews/722
+Content-Type: application/json
+
+{
+  "rating": 4,
+  "comment": "I love kiwis! They are so delicious and refreshing. I could eat them every day.",
+  "date": "2025-05-28T08:56:21.62"
+}
+
+###
+DELETE http://localhost:8000/api/v1/reviews/722

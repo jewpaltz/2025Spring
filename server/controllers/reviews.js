@@ -1,6 +1,6 @@
 /*  B"H
 */
-const model = require('../models/products')
+const model = require('../models/reviews')
 const express = require('express')
 const router = express.Router()
 
@@ -53,13 +53,7 @@ router
         }).catch(next)
 
     })
-    .post('/seed', (req, res, next) => {
-        const { data } = req.body
-
-        model.seed(data).then((data) => {
-            res.status(201).send(data)
-        }).catch(next)
-    })
+    // reviews are seeded with the products
 
 module.exports = router
 
