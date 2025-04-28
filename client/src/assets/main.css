@@ -1,3 +1,7 @@
 @import 'bulma/css/bulma.css';
 @import '@fortawesome/fontawesome-free/css/all.css';
+@import 'buefy/dist/buefy.css';
 
+.title:not(.is-spaced) + .subtitle {
+    margin-top: 0;
+}

@@ -14,6 +14,11 @@ getAll()
 function doAddToCart(product: Product) {
     addToCart(product)
 }
+interface Ratable {
+    product_reviews: {
+        average_rating: number;
+    }
+}
 </script>
 
 <template>
@@ -27,17 +32,26 @@ function doAddToCart(product: Product) {
                     </RouterLink>
                 </div>
                 <div class="product-info">
+
+                    <b-rate :model-value="(p as any)?.product_reviews[0]?.average_rating" disabled
+                            show-score></b-rate>
+
                     <h2>{{ p.title }}</h2>
                     <p>{{ p.description }}</p>
                     <span class="price">${{ p.price }}</span>
                     <button class="button is-success" @click="doAddToCart(p)">Add to cart</button>
                 </div>
+
             </div>
         </div>
     </div>
 </template>
 
 <style scoped>
+.rate {
+    float: right;
+}
+
 .shelf {
     display: flex;
     flex-wrap: wrap;

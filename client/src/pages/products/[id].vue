@@ -2,7 +2,7 @@
 import { getOne, type Product } from '@/models/products';
 import dayjs from 'dayjs';
 import relativeTime from 'dayjs/plugin/relativeTime';
-import { ref } from 'vue';
+import { computed, ref } from 'vue';
 import { useRoute } from 'vue-router';
 
 dayjs.extend(relativeTime);
@@ -15,7 +15,10 @@ getOne(route.params.id)
         product.value = response;
     })
 
-
+const avg_rating = computed(() =>
+    (product.value?.reviews?.reduce((acc, review) => acc + (review?.rating ?? 0), 0) ?? 0)
+    / (product.value?.reviews?.length ?? 1)
+);
 
 </script>
 
@@ -27,6 +30,7 @@ getOne(route.params.id)
                 <img v-for="i in product.images" :src="i" alt="product image" />
             </div>
             <div class="product-info">
+                <b-rate v-model="avg_rating" disabled show-score size="is-large"></b-rate>
                 <h1 class="title">
                     {{ product.title }}
                 </h1>
@@ -45,8 +49,10 @@ getOne(route.params.id)
                             <div class="card-content">
                                 <img :src="review.reviewer?.image" alt="reviewer avatar"
                                      class="avatar" />
-                                <strong>{{ review.reviewer?.firstName }} {{ review.reviewer?.lastName }}</strong> - {{
-                                    review.rating }} stars
+                                <strong>{{ review.reviewer?.firstName }} {{ review.reviewer?.lastName }}</strong> -
+
+                                <b-rate v-model="review.rating" disabled show-score></b-rate>
+
                                 <p>{{ review.comment }}</p>
                                 <i>
                                     {{ dayjs(review.date).fromNow() }}
@@ -72,6 +78,10 @@ getOne(route.params.id)
     border: 1px solid #ccc;
     margin-bottom: .5em;
     ;
+}
+
+.rate {
+    float: right;
 }
 
 .avatar {

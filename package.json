@@ -12,6 +12,7 @@
     "license": "ISC",
     "dependencies": {
         "@supabase/supabase-js": "^2.49.4",
+        "buefy": "npm:@ntohq/buefy-next@^0.2.0",
         "dayjs": "^1.11.13",
         "dotenv": "^16.4.7",
         "express": "^4.21.2"
