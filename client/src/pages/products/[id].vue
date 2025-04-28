@@ -1,5 +1,7 @@
 <script setup lang="ts">
-import { getOne, type Product } from '@/models/products';
+import { api } from '@/models/myFetch';
+import { getOne, type ProductReview, type Product } from '@/models/products';
+import { refSession } from '@/models/session';
 import dayjs from 'dayjs';
 import relativeTime from 'dayjs/plugin/relativeTime';
 import { computed, ref } from 'vue';
@@ -10,6 +12,13 @@ dayjs.extend(relativeTime);
 const route = useRoute('/products/[id]')
 const product = ref<Product>();
 
+const newReview = ref<Partial<ProductReview>>({
+    rating: 0,
+    comment: '',
+})
+
+const session = refSession();
+
 getOne(route.params.id)
     .then((response) => {
         product.value = response;
@@ -19,6 +28,28 @@ const avg_rating = computed(() =>
     (product.value?.reviews?.reduce((acc, review) => acc + (review?.rating ?? 0), 0) ?? 0)
     / (product.value?.reviews?.length ?? 1)
 );
+
+async function SubmitReview() {
+    if (!session.value.user) {
+        return;
+    }
+    const review = {
+        ...newReview.value,
+        product_id: product.value?.id,
+        reviewer_id: session.value.user.id,
+        reviewer: session.value.user,
+        date: new Date().toLocaleDateString(),
+    } as ProductReview;
+
+    //const response = await api('reviews', review)
+
+    product.value?.reviews?.push(review)
+
+    newReview.value = {
+        rating: 0,
+        comment: '',
+    }
+}
 
 </script>
 
@@ -61,6 +92,23 @@ const avg_rating = computed(() =>
 
                         </li>
                     </ul>
+                    <form class="card" v-if="session.user" @submit.prevent="SubmitReview">
+                        <div class="card-content">
+                            <img :src="session.user?.image" alt="reviewer avatar"
+                                 class="avatar" />
+                            <strong>{{ session.user?.firstName }} {{ session.user?.lastName }}</strong>
+
+                            <b-rate v-model="newReview.rating" show-score></b-rate>
+                            <textarea v-model="newReview.comment" class="textarea"
+                                      placeholder="Leave a review"></textarea>
+                            <button class="button is-success">Submit</button>
+                        </div>
+                    </form>
+                    <div v-else>
+                        <p>You need to be logged in to leave a review</p>
+
+                    </div>
+
                 </div>
             </div>
 
