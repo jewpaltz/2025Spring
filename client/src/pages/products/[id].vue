@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { api } from '@/models/myFetch';
 import { getOne, type ProductReview, type Product } from '@/models/products';
+import { create } from '@/models/reviews';
 import { refSession } from '@/models/session';
 import dayjs from 'dayjs';
 import relativeTime from 'dayjs/plugin/relativeTime';
@@ -37,13 +38,12 @@ async function SubmitReview() {
         ...newReview.value,
         product_id: product.value?.id,
         reviewer_id: session.value.user.id,
-        reviewer: session.value.user,
         date: new Date().toLocaleDateString(),
     } as ProductReview;
 
-    //const response = await api('reviews', review)
+    const response = await create(review);
 
-    product.value?.reviews?.push(review)
+    product.value?.reviews?.push(response)
 
     newReview.value = {
         rating: 0,
