@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { api } from '@/models/myFetch';
 import { getOne, type ProductReview, type Product } from '@/models/products';
-import { create } from '@/models/reviews';
+import { create, remove, update } from '@/models/reviews';
 import { refSession } from '@/models/session';
 import dayjs from 'dayjs';
 import relativeTime from 'dayjs/plugin/relativeTime';
@@ -30,7 +30,7 @@ const avg_rating = computed(() =>
     / (product.value?.reviews?.length ?? 1)
 );
 
-async function SubmitReview() {
+async function createReview() {
     if (!session.value.user) {
         return;
     }
@@ -48,6 +48,41 @@ async function SubmitReview() {
     newReview.value = {
         rating: 0,
         comment: '',
+    }
+}
+
+async function deleteReview(id: number) {
+
+    const response = await remove(id);
+    // if no exception was thrown, then the review was deleted
+    product.value?.reviews?.splice(product.value.reviews.findIndex((r) => r.id === id), 1);
+}
+
+async function startEdit(review: ProductReview) {
+    newReview.value = {
+        ...review,
+    }
+}
+
+async function updateReview() {
+    if (!newReview.value.id) {
+        return;
+    }
+    const response = await update(newReview.value.id, newReview.value as ProductReview);
+
+    product.value?.reviews?.splice(product.value.reviews.findIndex((r) => r.id === newReview.value.id), 1, response)
+
+    newReview.value = {
+        rating: 0,
+        comment: '',
+    }
+}
+
+async function SubmitReview() {
+    if (newReview.value.id) {
+        await updateReview();
+    } else {
+        await createReview();
     }
 }
 
@@ -77,6 +112,23 @@ async function SubmitReview() {
                     Reviews:
                     <ul>
                         <li class="card" v-for="review in product.reviews" :key="review.id">
+                            <div v-if="review.reviewer_id == session.user?.id || session.user?.role == 'admin'"
+                                 class="buttons  has-addons" style="float: right;">
+                                <button class="button is-small" @click="startEdit(review)">
+
+                                    <span class="icon is-small">
+                                        <i class="fas fa-edit"></i>
+                                    </span>
+
+                                </button>
+                                <button class="button is-small" @click="deleteReview(review.id)">
+                                    <span class="icon is-small">
+                                        <i class="fas fa-trash"></i>
+                                    </span>
+                                </button>
+                            </div>
+
+
                             <div class="card-content">
                                 <img :src="review.reviewer?.image" alt="reviewer avatar"
                                      class="avatar" />

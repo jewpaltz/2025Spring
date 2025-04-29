@@ -89,7 +89,10 @@ async function remove(id){
     if (error) {
         throw error
     }
-    return deletedItem
+    return {
+        message: `Deleted review #${id} successfully`,
+        status: statusCodes.OK,
+    }
 }
 
 // We are seeding reviews in the products model. So this is not needed here
