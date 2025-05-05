@@ -27,6 +27,12 @@ importers:
       '@tsconfig/node22':
         specifier: ^22.0.0
         version: 22.0.0
+      '@types/google.accounts':
+        specifier: ^0.0.15
+        version: 0.0.15
+      '@types/googlemaps':
+        specifier: ^3.43.3
+        version: 3.43.3
       '@types/node':
         specifier: ^22.13.4
         version: 22.13.5
@@ -582,6 +588,13 @@ packages:
 
   '@types/estree@1.0.6':
     resolution: {integrity: sha512-AYnb1nQyY49te+VRAVgmzfcgjYS91mY5P0TKUDCLEM+gNnA+3T6rWITXRLYCpahpqSQbN5cE+gHpnPyXjHWxcw==}
+
+  '@types/google.accounts@0.0.15':
+    resolution: {integrity: sha512-NiydIuJzwdpnWNqTPOeDzGXhzz46Ll6T4rN3YWSm9Zfx/8ZfbwFbzyPSw1Tkz4uE3gQiU+fRj4KvBVUuHmk+KQ==}
+
+  '@types/googlemaps@3.43.3':
+    resolution: {integrity: sha512-ZWNoz/O8MPEpiajvj7QiqCY8tTLFNqNZ/a+s+zTV58wFVNAvvqV4bdGfnsjTb5Cs4V6wEsLrX8XRhmnyYJ2Tdg==}
+    deprecated: 'Types for the Google Maps browser API have moved to @types/google.maps. Note: these types are not for the googlemaps npm package, which is a Node API.'
 
   '@types/json-schema@7.0.15':
     resolution: {integrity: sha512-5+fP8P8MFNC+AyZCDxrB2pkZFPGzqQWUzpSeuuVLvm8VMcorNYavBqoFcxK8bQz4Qsbn4oUEEem4wDLfcysGHA==}
@@ -2174,6 +2187,10 @@ snapshots:
   '@tsconfig/node22@22.0.0': {}
 
   '@types/estree@1.0.6': {}
+
+  '@types/google.accounts@0.0.15': {}
+
+  '@types/googlemaps@3.43.3': {}
 
   '@types/json-schema@7.0.15': {}
 
