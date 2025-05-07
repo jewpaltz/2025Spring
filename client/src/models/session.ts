@@ -42,8 +42,13 @@ export async function googleLogin() {
   //const google = (window as any).google
   const oAuthClient = google?.accounts?.oauth2?.initTokenClient({
     client_id: import.meta.env.VITE_GOOGLE_CLIENT_ID,
+    // drive scope
     scope:
-      'https://www.googleapis.com/auth/userinfo.profile https://www.googleapis.com/auth/userinfo.email',
+      'https://www.googleapis.com/auth/drive.file https://www.googleapis.com/auth/drive.metadata.readonly https://www.googleapis.com/auth/drive.appdata ' +
+      'https://www.googleapis.com/auth/photoslibrary.readonly ' +
+      'https://www.googleapis.com/auth/photoslibrary.sharing ' +
+      'https://www.googleapis.com/auth/photoslibrary ' +
+      'https://www.googleapis.com/auth/userinfo.profile https://www.googleapis.com/auth/userinfo.email ',
 
     callback: async (response) => {
       if (response.error) {
