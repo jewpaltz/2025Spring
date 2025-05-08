@@ -4,6 +4,7 @@
 // I took out a reference to the json. Because the only use for it is to seed the database. and reviews are seeded along with products
 const { CustomError, statusCodes } = require('./errors')
 const { connect } = require('./supabase')
+const { EventEmitter } = require('events')
 
 const TABLE_NAME = 'product_reviews'
 
@@ -14,6 +15,9 @@ const BaseQuery = () => connect().from(TABLE_NAME)
     .select('*, product: products(*), reviewer:users(*)', { count: "estimated" })
 
 const isAdmin = true;
+
+const event_bus = new EventEmitter()
+
 
 async function getAll(limit = 30, offset = 0, sort = 'id', order = 'desc'){
     const list = await BaseQuery()
@@ -66,6 +70,7 @@ async function create(item){
         throw error
     }
     const newItem = await get(data[0].id)
+    event_bus.emit('reviews.new', newItem)
     return newItem
 }
 
@@ -104,4 +109,5 @@ module.exports = {
     create,
     update,
     remove,
+    event_bus,
 }

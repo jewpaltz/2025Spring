@@ -1,18 +1,17 @@
 <script setup lang="ts">
 import { askGemini } from '@/models/google';
-import { api } from '@/models/myFetch';
-import { getOne, type ProductReview, type Product } from '@/models/products';
+import { type ProductReview, type Product, useProductEventSource } from '@/models/products';
 import { create, remove, update } from '@/models/reviews';
 import { refSession } from '@/models/session';
 import dayjs from 'dayjs';
 import relativeTime from 'dayjs/plugin/relativeTime';
-import { computed, ref } from 'vue';
+import { computed, ref, watch } from 'vue';
 import { useRoute } from 'vue-router';
 
 dayjs.extend(relativeTime);
 
 const route = useRoute('/products/[id]')
-const product = ref<Product>();
+const { product, events } = useProductEventSource(+route.params.id);
 
 const newReview = ref<Partial<ProductReview>>({
     rating: 0,
@@ -21,10 +20,13 @@ const newReview = ref<Partial<ProductReview>>({
 
 const session = refSession();
 
-getOne(route.params.id)
-    .then((response) => {
-        product.value = response;
-    })
+
+watch(events, (events) => {
+    events.forEach((event) => {
+        console.log('Event from productEventSource', event);
+    });
+});
+
 
 const avg_rating = computed(() =>
     (product.value?.reviews?.reduce((acc, review) => acc + (review?.rating ?? 0), 0) ?? 0)
@@ -42,9 +44,7 @@ async function createReview() {
         date: new Date().toLocaleDateString(),
     } as ProductReview;
 
-    const response = await create(review);
-
-    product.value?.reviews?.push(response)
+    await create(review);
 
     newReview.value = {
         rating: 0,
@@ -54,7 +54,7 @@ async function createReview() {
 
 async function deleteReview(id: number) {
 
-    const response = await remove(id);
+    await remove(id);
     // if no exception was thrown, then the review was deleted
     product.value?.reviews?.splice(product.value.reviews.findIndex((r) => r.id === id), 1);
 }

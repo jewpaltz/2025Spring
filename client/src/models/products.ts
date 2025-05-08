@@ -1,9 +1,11 @@
 /* B"H
  */
 
+import { ref } from 'vue'
 import type { DataListEnvelope } from './dataEnvelopes'
 import { api } from './session'
 import type { User } from './users'
+import { API_ROOT } from './myFetch'
 
 export interface ProductDimensions {
   width: number
@@ -59,4 +61,31 @@ export function getAll() {
 
 export function getOne(id: string) {
   return api<Product>(`products/${id}`)
+}
+
+export function useProductEventSource(id: number) {
+  const events = ref<MessageEvent[]>([])
+  const product = ref<Product | null>(null)
+
+  const eventSource = new EventSource(`${API_ROOT}products/${id}`)
+
+  eventSource.addEventListener('product', (event) => {
+    const data = JSON.parse(event.data)
+    product.value = data
+    console.log('product from raw event', data)
+  })
+
+  eventSource.addEventListener('reviews.new', (event) => {
+    const data = JSON.parse(event.data)
+    if (product.value) {
+      product.value.reviews = product.value.reviews || []
+      product.value.reviews.push(data)
+    }
+  })
+
+  eventSource.addEventListener('error', (event) => {
+    console.error('Error from raw event', event)
+  })
+
+  return { events, product }
 }

@@ -1,6 +1,7 @@
 /*  B"H
 */
 const model = require('../models/products')
+const reviews = require('../models/reviews')
 const express = require('express')
 const router = express.Router()
 
@@ -17,7 +18,33 @@ router
         const { id } = req.params
 
         model.get(id).then((data) => {
-            res.send(data)
+            if(req.headers.accept === 'text/event-stream'){ // check if the request is for SSE
+                res.writeHead(200, {
+                    'Content-Type': "text/event-stream",
+                    'Cache-Control': "no-cache",
+                    'Connection': "keep-alive"
+                });
+                res.write(`event: product\n`)
+                res.write(`data: ${JSON.stringify(data)}\n`)
+                res.write(`id: product_${id}\n\n`)
+
+                const newReview = (review) => {
+                    if(review.product_id == id){
+
+                        res.write(`event: reviews.new\n`)
+                        res.write(`data: ${JSON.stringify(review)}\n`)
+                        res.write(`id: review_${review.id}\n\n`)
+                    }
+                }
+                reviews.event_bus.on('reviews.new', newReview);
+
+                res.on('close', () => {
+                    reviews.event_bus.removeListener('reviews.new', newReview);
+                    console.log('Client disconnected')
+                })
+            } else {
+                res.send(data)
+            }
         }).catch(next)
 
     })

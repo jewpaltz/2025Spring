@@ -29,12 +29,13 @@ async function getAll(limit = 30, offset = 0, sort = 'id', order = 'desc'){
 async function get(id){
     const { data: item, error } = await connect().from(TABLE_NAME)
     .select('*, reviews:product_reviews(*, reviewer:users(*))').eq('id', id)
-    if (!item.length) {
-        throw new CustomError('Item not found', statusCodes.NOT_FOUND)
-    }
     if (error) {
         throw error
     }
+    if (!item.length) {
+        throw new CustomError('Item not found', statusCodes.NOT_FOUND)
+    }
+
     return item[0]
 }
 
