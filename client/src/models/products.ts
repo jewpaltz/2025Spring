@@ -63,6 +63,10 @@ export function getOne(id: string) {
   return api<Product>(`products/${id}`)
 }
 
+export function search(query: string, limit = 10, offset = 0) {
+  return api<DataListEnvelope<Product>>(`products/search/${query}?offset=${offset}&limit=${limit}`)
+}
+
 export function useProductEventSource(id: number) {
   const events = ref<MessageEvent[]>([])
   const product = ref<Product | null>(null)

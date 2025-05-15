@@ -1,23 +1,24 @@
 <script setup lang="ts">
 import { refCart } from '@/models/cart';
+import { search, type Product } from '@/models/products';
 import { ref } from 'vue';
 
 const cart = refCart();
 const newItemId = ref('');
 const showAddItem = ref(false);
-const options = ref([
-    { label: 'Apples', value: '1' },
-    { label: 'Bananas', value: '2' },
-    { label: 'Cherries', value: '3' },
-    { label: 'Dates', value: '4' },
-    { label: 'Eggplants', value: '5' },
-    { label: 'Figs', value: '6' },
-    { label: 'Grapes', value: '7' },
-    { label: 'Honeydew', value: '8' },
-    { label: 'Kiwi', value: '9' },
-    { label: 'Lemons', value: '10' }
-]);
+const options = ref<{
+    value: Product;
+    label: string;
+}[]>([]);
 
+async function getAsyncData(value: string) {
+
+    const response = await search(value);
+    options.value = response.items.map((item) => ({
+        value: item,
+        label: item.title
+    }));
+}
 </script>
 
 <template>
@@ -40,14 +41,31 @@ const options = ref([
                                 <o-autocomplete
                                                 v-model="newItemId"
                                                 :options="options"
-                                                option-value="id"
-                                                option-label="title"
-                                                option-thumbnail="thumbnail"
+                                                backend-filtering
+                                                :debounce="500"
+                                                @input="getAsyncData"
                                                 expanded
                                                 placeholder="Select a product"
                                                 icon="search"
                                                 clearable
                                                 open-on-focus>
+                                    <template #default="{ value }">
+                                        <div class="media">
+                                            <div class="media-left">
+                                                <img
+                                                     width="32"
+                                                     :src="value.thumbnail" />
+                                            </div>
+                                            <div class="media-content">
+                                                {{ value.title }}
+                                                <br />
+                                                <small>
+                                                    {{ value.description }}
+                                                </small>
+                                            </div>
+                                        </div>
+                                    </template>
+
                                 </o-autocomplete>
                             </div>
                         </div>
