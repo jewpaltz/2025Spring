@@ -16,7 +16,9 @@
     "@fortawesome/fontawesome-free": "^5.15.4",
     "@oruga-ui/oruga-next": "^0.10.5",
     "@oruga-ui/theme-oruga": "^0.6.0",
+    "buefy": "npm:@ntohq/buefy-next@^0.2.0",
     "bulma": "^1.0.3",
+    "dayjs": "^1.11.13",
     "vue": "^3.5.13",
     "@vueuse/core": "^12.8.2",
     "vue-router": "^4.5.0"
